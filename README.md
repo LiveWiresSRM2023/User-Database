@@ -1,4 +1,4 @@
-## 🎶 Welcome to the User Database Management System! 🎸
+## Welcome to the User Database Management System! 
 
 Hey there, rockstar! 🤘 Welcome to our User Database Management System - the coolest way to manage user data like a pro! 💥
 
