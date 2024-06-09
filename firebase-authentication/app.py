@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import pyrebase
 import re
+import requests
 import urllib.parse
+import firebase_admin
+from datetime import datetime
+from firebase_admin import credentials, db
+
 
 app = Flask(__name__)
 app.secret_key = "YourSecretKey"
@@ -21,7 +26,12 @@ firebaseConfig = {
 
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
-db = firebase.database()
+database = firebase.database()
+
+cred = credentials.Certificate(" <PATH TO serviceAccountKey.json>")
+firebase_admin.initialize_app(cred, {
+        'databaseURL': 'YOUR-DATABASE-URL'
+})
 
 # Email validation function
 def is_valid_email(email):
@@ -33,6 +43,22 @@ def is_valid_email(email):
 def index():
     return render_template('index.html')
 
+@app.route('/admin/users', methods=['GET'])
+def admin_users():
+    user_data = get_users_data()
+    return render_template('users.html', users=user_data)
+
+def get_users_data():
+    ref = db.reference('users')
+    users_snapshot = ref.get()
+    users = []
+    for key, value in users_snapshot.items():
+        user = value
+        user['id'] = key  # Add the key as ID for reference
+        users.append(user)
+    
+    return users
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -41,6 +67,7 @@ def signup():
         name = request.form['name']
         register_number = request.form['register_number']
         phone_number = request.form['phone_number']
+        github_link = request.form['git_link']
         
         if not is_valid_email(email):
             return "Please use your SRMIST email for sign Up"
@@ -50,7 +77,7 @@ def signup():
         try:
             encoded = urllib.parse.quote(email,safe="")
             
-            users = db.child('users').get()
+            users = database.child('users').get()
             if users.each():
                 for user in users.each():
                     user_data = user.val()
@@ -71,9 +98,11 @@ def signup():
                 'name': name,
                 'register_number': register_number,
                 'phone_number': phone_number,
-                'email':email
+                'email':email,
+                'git_link':github_link,
+                'role':'Member'
             }
-            db.child('users').child(uid).set(user_data)
+            database.child('users').child(uid).set(user_data)
 
             return redirect(url_for('login'))
         except Exception as e:
@@ -106,27 +135,6 @@ def forgot_password():
         except Exception as e:
             return "An error occurred: " + str(e)
     return render_template('forget.html')
-
-# @app.route('/reset_password/<token>', methods=['GET', 'POST'])
-# def reset_password(token):
-#     if request.method == 'POST':
-#         new_password = request.form['new_password']
-#         confirm_password = request.form['confirm_password']
-
-#         # Validate passwords
-#         if new_password != confirm_password:
-#             return "Passwords do not match. Please try again."
-
-#         try:
-#             # Reset password using the token
-#             auth.confirm_password_reset(token, new_password)
-#             return "Password updated successfully."
-#         except Exception as e:
-#             return "An error occurred: " + str(e)
-
-#     # Render the reset password page
-#     return render_template('reset_password.html')
-
 
 @app.route('/dashboard')
 def dashboard():
