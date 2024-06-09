@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='users.css') }}">
+</head>
+<body>
+    <h1>User Details</h1>
+    <table class="center">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Register Number</th>
+                <th>Phone Number</th>
+                <th>Github Link</th>
+                <th>Last Commit</th>
+                <!-- Add more fields as necessary -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.register_number}}</td>
+                <td>{{user.phone_number}}</td>
+                <td><a href="{{user.git_link}}">{{user.git_link}}</a></td>
+                <!-- Add more fields as necessary -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
