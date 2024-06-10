@@ -54,10 +54,26 @@ def get_users_data():
     users = []
     for key, value in users_snapshot.items():
         user = value
-        user['id'] = key  # Add the key as ID for reference
+        user['id'] = key
+        github_username = user.get('git_link', '').split('/')[-1]
+        timestamp = get_last_commit(github_username)
+        dt = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
+        formatted_dt = dt.strftime("%d-%m-%Y, %I:%M %p")
+        user['last_commit'] = formatted_dt
         users.append(user)
     
     return users
+
+def get_last_commit(github_username):
+    url = f"https://api.github.com/users/{github_username}/events/public"
+    response = requests.get(url)
+    if response.status_code == 200:
+        events = response.json()
+        for event in events:
+            if event['type'] == 'PushEvent':
+                last_commit = event['created_at']
+                return last_commit
+    return None
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -72,8 +88,6 @@ def signup():
         if not is_valid_email(email):
             return "Please use your SRMIST email for sign Up"
         
-
-        
         try:
             encoded = urllib.parse.quote(email,safe="")
             
@@ -85,9 +99,7 @@ def signup():
                         return "This email is already signed up. Please go back to the login page."
             
         except Exception as e:
-            return str(e)
-            
-        
+            return str(e)      
         
         try:
             
