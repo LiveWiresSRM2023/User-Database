@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash, get_flashed_messages
 import pyrebase
 import re
 import requests
@@ -14,23 +14,23 @@ app.secret_key = "YourSecretKey"
 # Initialize Firebase
 
 firebaseConfig = {
-    'apiKey': "YOURAPIKEY",
-    'authDomain': "YOUR-PROJECT-DOMAIN-AUTH",
-    'projectId': "YOUR-PROJECT-ID",
-    'storageBucket': "YOUR-PROJECT-STRAGE-BUCKET",
-    'messagingSenderId': "MESSAGING-id",
-    'appId': "YOUR-WEB-APP-ID",
-    'measurementId': "YOUR-MEASUREMENT-ID",
-    'databaseURL': "YOUR-REALTIME-DATABSE-URL"
+    'apiKey': "AIzaSyCujlacKylY_iheLrVG76fSUbO6Xfr1B30",
+    'authDomain': "fir-a18a9.firebaseapp.com",
+    'projectId': "fir-a18a9",
+    'storageBucket': "fir-a18a9.appspot.com",
+    'messagingSenderId': "638128600189",
+    'appId': "1:638128600189:web:6a39223b299193c8deed14",
+    'measurementId': "YG-EMHR0ZZ2HW",
+    'databaseURL': "https://fir-a18a9-default-rtdb.asia-southeast1.firebasedatabase.app/"
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 database = firebase.database()
 
-cred = credentials.Certificate(" <PATH TO serviceAccountKey.json>")
+cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
-        'databaseURL': 'YOUR-DATABASE-URL'
+        'databaseURL': 'https://fir-a18a9-default-rtdb.asia-southeast1.firebasedatabase.app'
 })
 
 # Email validation function
@@ -45,6 +45,9 @@ def index():
 
 @app.route('/admin/users', methods=['GET'])
 def admin_users():
+    admins = ['rs9068@srmist.edu.in']
+    if 'user' not in session or session['user']['email'] not in admins:
+        return redirect(url_for('login'))
     user_data = get_users_data()
     return render_template('users.html', users=user_data)
 
@@ -128,12 +131,16 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        try:
-            user = auth.sign_in_with_email_and_password(email, password)
-            session['user'] = user
-            return redirect(url_for('dashboard'))
-        except Exception as e:
-            return render_template('login.html', error=str(e))
+        admins = ['rs9068@srmist.edu.in']
+        if email in admins:
+            return render_template('admin.html')
+        else:
+            try:
+                user = auth.sign_in_with_email_and_password(email, password)
+                session['user'] = user
+                return redirect(url_for('dashboard'))
+            except Exception as e:
+                return render_template('login.html', error=str(e))
 
     return render_template('login.html')
 
@@ -148,11 +155,10 @@ def forgot_password():
             return "An error occurred: " + str(e)
     return render_template('forget.html')
 
-@app.route('/dashboard')
+@app.route('/dashboard',methods = ['POST','GET'])
 def dashboard():
     if 'user' in session:
         user = session['user']
-        # You can retrieve user data from Firebase and pass it to the template
         return render_template('dashboard.html', user=user)
     else:
         return redirect(url_for('login'))
