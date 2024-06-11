@@ -28,6 +28,7 @@
                 <td>{{ user.register_number}}</td>
                 <td>{{user.phone_number}}</td>
                 <td><a href="{{user.git_link}}">{{user.git_link}}</a></td>
+                <td>{{ user.last_commit or 'No recent commits' }}</td>
                 <!-- Add more fields as necessary -->
             </tr>
             {% endfor %}
