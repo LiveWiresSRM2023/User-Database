@@ -1,0 +1,16 @@
+body {
+    background-color: #1f1f1f; /* Dark gray background */
+    color: #fff; /* White text color */
+    font-family: Arial, sans-serif; /* Choose a suitable font */
+}
+div{
+    text-align: center;
+    padding: 10px;
+}
+form{
+    padding: 10px;
+}
+button{
+    border-radius: 5px;
+    padding: 8px;
+}
