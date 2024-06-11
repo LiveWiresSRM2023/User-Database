@@ -45,9 +45,6 @@ def index():
 
 @app.route('/admin/users', methods=['GET'])
 def admin_users():
-    admins = ['rs9068@srmist.edu.in']
-    if 'user' not in session or session['user']['email'] not in admins:
-        return redirect(url_for('login'))
     user_data = get_users_data()
     return render_template('users.html', users=user_data)
 
