@@ -14,23 +14,23 @@ app.secret_key = "YourSecretKey"
 # Initialize Firebase
 
 firebaseConfig = {
-    'apiKey': "AIzaSyCujlacKylY_iheLrVG76fSUbO6Xfr1B30",
-    'authDomain': "fir-a18a9.firebaseapp.com",
-    'projectId': "fir-a18a9",
-    'storageBucket': "fir-a18a9.appspot.com",
-    'messagingSenderId': "638128600189",
-    'appId': "1:638128600189:web:6a39223b299193c8deed14",
-    'measurementId': "YG-EMHR0ZZ2HW",
-    'databaseURL': "https://fir-a18a9-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    'apiKey': "YOUR API KEY",
+    'authDomain': "YOUR AUTH DOMAIN",
+    'projectId': "YOUR PROJECT ID ",
+    'storageBucket': "YOUR STORAGE BUCKET",
+    'messagingSenderId': "YOUR MESSAGING SENDER ID",
+    'appId': "YOUR APP ID",
+    'measurementId': "YOUR MEASUREMENT ID",
+    'databaseURL': "YOUR DATABASE URL"
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 database = firebase.database()
 
-cred = credentials.Certificate("serviceAccountKey.json")
+cred = credentials.Certificate("<PATH TO serviceAccountKey.json>")
 firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://fir-a18a9-default-rtdb.asia-southeast1.firebasedatabase.app'
+        'databaseURL': 'YOUR DATABASE URL'
 })
 
 # Email validation function
@@ -63,7 +63,6 @@ def get_users_data():
         final_time = ist_time.strftime("%d-%m-%Y , %I:%M %p")
         user['last_commit'] = final_time
         users.append(user)
-
     return users
 
 def get_last_commit(github_username):
