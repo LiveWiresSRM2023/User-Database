@@ -4,7 +4,7 @@ import re
 import requests
 import urllib.parse
 import firebase_admin
-from datetime import datetime
+from datetime import datetime,timedelta
 from firebase_admin import credentials, db
 
 
@@ -43,7 +43,7 @@ def is_valid_email(email):
 def index():
     return render_template('index.html')
 
-@app.route('/admin/users', methods=['GET'])
+@app.route('/admin/users', methods=['GET','POST'])
 def admin_users():
     user_data = get_users_data()
     return render_template('users.html', users=user_data)
@@ -57,11 +57,13 @@ def get_users_data():
         user['id'] = key
         github_username = user.get('git_link', '').split('/')[-1]
         timestamp = get_last_commit(github_username)
-        dt = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-        formatted_dt = dt.strftime("%d-%m-%Y, %I:%M %p")
-        user['last_commit'] = formatted_dt
+        utc_time = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
+        ist_difference = timedelta(hours=5, minutes=30)
+        ist_time = utc_time + ist_difference
+        final_time = ist_time.strftime("%d-%m-%Y , %I:%M %p")
+        user['last_commit'] = final_time
         users.append(user)
-    
+
     return users
 
 def get_last_commit(github_username):
@@ -129,15 +131,16 @@ def login():
         password = request.form['password']
 
         admins = ['rs9068@srmist.edu.in']
-        if email in admins:
-            return render_template('admin.html')
-        else:
-            try:
-                user = auth.sign_in_with_email_and_password(email, password)
-                session['user'] = user
+
+        try:
+            user = auth.sign_in_with_email_and_password(email, password)
+            session['user'] = user
+            if email in admins:
+                return render_template('admin.html')
+            else:
                 return redirect(url_for('dashboard'))
-            except Exception as e:
-                return render_template('login.html', error=str(e))
+        except Exception as e:
+            return render_template('login.html', error=str(e))
 
     return render_template('login.html')
 
@@ -152,7 +155,7 @@ def forgot_password():
             return "An error occurred: " + str(e)
     return render_template('forget.html')
 
-@app.route('/dashboard',methods = ['POST','GET'])
+@app.route('/dashboard')
 def dashboard():
     if 'user' in session:
         user = session['user']
