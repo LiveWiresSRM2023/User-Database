@@ -6,9 +6,11 @@
     <title>User Details</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='users.css') }}">
 </head>
-<body>
-    <h1>User Details</h1>
-    <table class="center">
+<body><div class="topbar">
+    <div class="logo"></div>
+    <div class="heading"><h1>User Details </h1></div>
+    </div>
+    <div><table class="center">
         <thead>
             <tr>
                 <th>Name</th>
@@ -34,5 +36,6 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 </body>
 </html>
