@@ -57,3 +57,20 @@ a{
     text-decoration: none;
     color: white;
 }
+.logout-btn{
+    text-align: right;
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4285f4; /* Blue background */
+    color: #fff; /* White text color */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .submit-btn:hover {
+    background-color: #1a73e8; /* Darker blue background on hover */
+  }

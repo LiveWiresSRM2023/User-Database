@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    
 </head>
 <body>
     <div>
@@ -16,6 +17,11 @@
         <form action="/dashboard" method="GET">
             <button class="submit-btn" type="submit">Go to Dashboard</button>
         </form>
+        <div class="logout-btn">
+            <form action="/logout" method="POST">
+                <button class="submit-btn" type="submit">Logout</button>
+            </form>
+        </div>
     </div>
     </div>
 </body>

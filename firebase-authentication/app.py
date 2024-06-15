@@ -1,18 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, get_flashed_messages
+from flask import Flask, render_template, request, redirect, url_for, session
 import pyrebase
 import re
 import requests
 import urllib.parse
 import firebase_admin
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from firebase_admin import credentials, db
-
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = "YourSecretKey"
 
 # Initialize Firebase
-
 firebaseConfig = {
     'apiKey': "YOUR API KEY",
     'authDomain': "YOUR AUTH DOMAIN",
@@ -28,9 +27,11 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 database = firebase.database()
 
-cred = credentials.Certificate("<PATH TO serviceAccountKey.json>")
+cred = credentials.Certificate(
+   "<PATH TO serviceAccountKey.json>"
+)
 firebase_admin.initialize_app(cred, {
-        'databaseURL': 'YOUR DATABASE URL'
+    'databaseURL': 'YOUR DATABASE URL'
 })
 
 # Email validation function
@@ -38,12 +39,27 @@ def is_valid_email(email):
     # Use regular expression to validate email format
     return re.match(r"[^@]+@srmist\.edu\.in", email)
 
+# Admin check decorator
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('login'))
+        user = session['user']
+        email = user['email']
+        admins = ['bs1329@srmist.edu.in']  # List of admin emails
+        if email not in admins:
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Routes
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/admin/users', methods=['GET','POST'])
+@app.route('/admin/users', methods=['GET', 'POST'])
+@admin_required
 def admin_users():
     user_data = get_users_data()
     return render_template('users.html', users=user_data)
@@ -90,7 +106,7 @@ def signup():
             return "Please use your SRMIST email for sign Up"
         
         try:
-            encoded = urllib.parse.quote(email,safe="")
+            encoded = urllib.parse.quote(email, safe="")
             
             users = database.child('users').get()
             if users.each():
@@ -103,7 +119,6 @@ def signup():
             return str(e)      
         
         try:
-            
             user = auth.create_user_with_email_and_password(email, password)
             uid = user['localId']
 
@@ -111,9 +126,9 @@ def signup():
                 'name': name,
                 'register_number': register_number,
                 'phone_number': phone_number,
-                'email':email,
-                'git_link':github_link,
-                'role':'Member'
+                'email': email,
+                'git_link': github_link,
+                'role': 'Member'
             }
             database.child('users').child(uid).set(user_data)
 
@@ -129,11 +144,13 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        admins = ['rs9068@srmist.edu.in']
-
         try:
             user = auth.sign_in_with_email_and_password(email, password)
-            session['user'] = user
+            session['user'] = {
+                'idToken': user['idToken'],
+                'email': email
+            }
+            admins = ['bs1329@srmist.edu.in']
             if email in admins:
                 return render_template('admin.html')
             else:
@@ -162,7 +179,7 @@ def dashboard():
     else:
         return redirect(url_for('login'))
 
-@app.route('/logout', methods = ["POST","GET"])
+@app.route('/logout', methods=["POST", "GET"])
 def logout():
     session.pop('user', None)
     return redirect(url_for('index'))
