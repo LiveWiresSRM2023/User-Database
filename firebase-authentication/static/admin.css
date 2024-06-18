@@ -1,16 +1,75 @@
-body {
-    background-color: #1f1f1f; /* Dark gray background */
-    color: #fff; /* White text color */
-    font-family: Arial, sans-serif; /* Choose a suitable font */
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #0d0d0d;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('images/LW\ BG.jpeg');
 }
-div{
+.heading{
+    height: 100vh;
+    margin-top: 200px;
+}
+.Logo{
+    background-image: url('images/LiveWires\ Logo\ Lite.png');
+    background-repeat: no-repeat;
+    width: 300px;
+    height: 100px;
+    padding-bottom: 20px;
+}
+h1{
+    color: rgb(243, 249, 243);
+    font-style:italic;
+    padding-bottom: 40px;
+    font-size:xx-large;
+}
+form{
     text-align: center;
     padding: 10px;
 }
-form{
-    padding: 10px;
-}
 button{
-    border-radius: 5px;
-    padding: 8px;
+    border-radius: 20px;
+    padding: 10px;
+    color: rgb(243, 249, 245);
+}
+.submit-btn{
+    background: none;
+    border: 2px solid rgb(46, 225, 127);
+    padding: 15px 30px;
+    font-size: 16px;
+    color: rgb(197, 227, 229);
+    cursor: pointer;
+    border-radius: 15px;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 0;
+}
+
+/* .submit-btn:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: rgb(35, 202, 110);
+    z-index: -1;
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 8px;
+} */
+
+/* .submit-btn:hover:before {
+    opacity: 1;
+} */
+
+.submit-btn:hover {
+    box-shadow: 0 0 10px rgb(73, 223, 133), 0 0 20px rgb(35, 174, 109), 0 0 30px rgb(9, 127, 87);
+    transform: scale(1.05);
 }
