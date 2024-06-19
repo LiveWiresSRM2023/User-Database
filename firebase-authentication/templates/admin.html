@@ -8,6 +8,12 @@
     
 </head>
 <body>
+    <div class="video-background">
+        <video  autoplay muted loop id="video-bg">
+            <source src="{{ url_for('static', filename='bg.mp4') }}" type="video/mp4">
+            <!-- Add additional source elements for different video formats -->
+        </video>
+    </div>
     <div class="body">
         <div class="Logo"></div>
         <div class="heading"><h1>Admin Page</h1></div>
