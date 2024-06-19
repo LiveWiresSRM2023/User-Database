@@ -3,14 +3,28 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #0d0d0d;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-image: url('images/LW\ BG.jpeg');
 }
+
 .heading{
-    height: 100vh;
-    margin-top: 200px;
+    height: 50px;
+    padding-bottom: 500px;
+}
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Ensure the video is behind other content */
+}
+
+#video-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the video covers the entire background */
 }
 .Logo{
     background-image: url('images/LiveWires\ Logo\ Lite.png');
@@ -35,7 +49,7 @@ button{
     color: rgb(243, 249, 245);
 }
 .submit-btn{
-    background: none;
+    background: black;
     border: 2px solid rgb(46, 225, 127);
     padding: 15px 30px;
     font-size: 16px;
@@ -50,7 +64,7 @@ button{
     z-index: 0;
 }
 
-/* .submit-btn:before {
+ /* .submit-btn:before {
     content: '';
     position: absolute;
     top: -5px;
@@ -63,9 +77,9 @@ button{
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
     border-radius: 8px;
-} */
+}
 
-/* .submit-btn:hover:before {
+.submit-btn:hover:before {
     opacity: 1;
 } */
 
