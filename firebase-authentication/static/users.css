@@ -15,11 +15,12 @@ th, td {
     background-position: center center;
     width: 30%;
     height: 100px;
+    padding-left: 50px;
 }
 .heading{
     width: 70%;
     text-align: left;
-    padding-left: 400px;
+    padding-left: 320px;
     font-style: initial;
 }
 body{
@@ -60,7 +61,7 @@ a{
     
 .logout-btn{
     text-align: right;
-    padding-right: 150px;
+    padding-right: 60px;
     padding-top: 25px;
 }
 
@@ -68,12 +69,12 @@ a{
     padding: 15px 25px;
     border: none;
     border-radius: 5px;
-    background-color: #4285f4; /* Blue background */
-    color: #fff; /* White text color */
+    background-color: darkgrey; 
+    color:black; 
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
   }
   
-  .submit-btn:hover {
-    background-color: #1a73e8; /* Darker blue background on hover */
+.submit-btn:hover {
+    background-color:grey;
   }
